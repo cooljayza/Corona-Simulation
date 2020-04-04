@@ -142,21 +142,24 @@ function startSimulation(e) {
             if(person.status == 3){infected ++;}
             drawCircle(ctx,person);
         }
-        healedHistory.push(healed);
-        healthyHistory.push(healthy);
-        diedHistory.push(died);
-        infectedHistory.push(infected);
+        //update the chart every one second
+        if(Math.floor(counter % 33.33) == 0){
+            healedHistory.push(healed);
+            healthyHistory.push(healthy);
+            diedHistory.push(died);
+            infectedHistory.push(infected);
+            counts.push(Math.round(counter / 33,2));
+        }
+        updateChart();
         document.getElementById("Recovered").innerText = "" + healed + " people Recovered";
         document.getElementById("Infected").innerText = "" + infected + "  people Infected";
         document.getElementById("Died").innerText = "" +  died + " Dead people";
         healthy = total - (healed + infected + died);
         document.getElementById("Healthy").innerText = "" + healthy + " Healthy people."
-        updateChart();
         if(infected === people.length || infected === 0){
             clearInterval(timer);
         }
         counter++;
-        counts.push(Math.round(counter / 33,2));
     },30)
 }
 function clearCanvas() {
@@ -290,10 +293,15 @@ var config = {
         title: {
             text: 'Chart.js Time Scale'
         },
+        elements: {
+            point:{
+                radius: 0
+            }
+        },
         scales: {
             xAxes: [{
                 scaleLabel: {
-                    display: false,
+                    display: true,
                     labelString: 'Time'
                 }
             }],
